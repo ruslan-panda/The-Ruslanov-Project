@@ -92,7 +92,6 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 pygame.display.set_caption("ХОХО ИТС МАРИО")
-
 tile_images = {
     'wall': load_image('floar.png'),
     'empty': load_image('back.png')
@@ -100,9 +99,7 @@ tile_images = {
 player_image = load_image('mar.png', -1)
 level = load_level(name_lvl)
 tile_width = tile_height = 50
-
 player = None
-
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
