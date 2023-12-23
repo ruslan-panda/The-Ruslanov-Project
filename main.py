@@ -101,7 +101,6 @@ level = load_level(name_lvl)
 tile_width = tile_height = 50
 
 player = None
-
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
