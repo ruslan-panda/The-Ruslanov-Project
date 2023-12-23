@@ -5,7 +5,7 @@ import os
 FPS = 60
 WIDTH, HEIGHT = 550, 550
 
-name_lvl = input()
+name_lvl = "map.txt"
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
     image = pygame.image.load(fullname).convert()
