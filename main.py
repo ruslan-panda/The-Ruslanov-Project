@@ -93,8 +93,8 @@ clock = pygame.time.Clock()
 pygame.display.set_caption("ХОХО ИТС МАРИО")
 
 tile_images = {
-    'wall': load_image('box.png'),
-    'empty': load_image('grass.png')
+    'wall': load_image('floar.png'),
+    'empty': load_image('back.png')
 }
 player_image = load_image('mar.png', -1)
 level = load_level(name_lvl)
