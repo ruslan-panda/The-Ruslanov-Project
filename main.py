@@ -1,10 +1,10 @@
 import pygame
-import sys
 import os
 
-FPS = 60
-WIDTH, HEIGHT = 550, 550
-name_lvl = "map.txt"
+pygame.init()
+screen=pygame.display.set_mode((1200,800))
+def draw_my_screen(my_simple_hero):
+    my_simple_hero.draw_on_screen()#рисует уже обновновленного героя
 
 
 def load_image(name, colorkey=None):
@@ -18,127 +18,102 @@ def load_image(name, colorkey=None):
         image = image.convert_alpha()
     return image
 
-
-def terminate():
-    pygame.quit()
-    sys.exit()
-
-
-def start_screen():
-    intro_text = ["ЗАСТАВКА", "",
-                  "Правила игры",
-                  "Если в правилах несколько строк,",
-                  "приходится выводить их построчно"]
-
-    fon = pygame.transform.scale(load_image('fon.jpg'), (WIDTH, HEIGHT))
-    screen.blit(fon, (0, 0))
-    font = pygame.font.Font(None, 30)
-    text_coord = 50
-    for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color('black'))
-        intro_rect = string_rendered.get_rect()
-        text_coord += 10
-        intro_rect.top = text_coord
-        intro_rect.x = 10
-        text_coord += intro_rect.height
-        screen.blit(string_rendered, intro_rect)
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                terminate()
-            elif event.type == pygame.KEYDOWN or \
-                event.type == pygame.MOUSEBUTTONDOWN:
-                return  # начинаем игру
-        pygame.display.flip()
-        clock.tick(FPS)
-
-
-def load_level(filename):
-    try:
-        filename = "data/" + filename
-        with open(filename, 'r') as mapFile:
-            level_map = [line.strip() for line in mapFile]
-        max_width = max(map(len, level_map))
-        return list(map(lambda x: x.ljust(max_width, '.'), level_map))
-    except FileNotFoundError:
-        print("ТЫ ЧЁ МНЕ ПОДСУНУЛ")
-        exit()
-
-
-class Tile(pygame.sprite.Sprite):
-    def __init__(self, tile_type, pos_x, pos_y):
-        super().__init__(tiles_group, all_sprites)
-        self.image = tile_images[tile_type]
-        self.rect = self.image.get_rect().move(
-            tile_width * pos_x, tile_height * pos_y)
-
-
-class Player(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y):
-        super().__init__(player_group, all_sprites)
-        self.image = player_image
-        self.rect = self.image.get_rect().move(100, 100)
-        self.pos = pos_x, pos_y
-
-    def move(self, x, y):
-        self.rect.x = x
-        self.rect.y = y
-
-
-pygame.init()
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-clock = pygame.time.Clock()
-pygame.display.set_caption("ХОХО ИТС МАРИО")
-tile_images = {
-    'wall': load_image('floar.png'),
-    'empty': load_image('back.png')
-}
-player_image = load_image('mar.png', -1)
-level = load_level(name_lvl)
-tile_width = tile_height = 50
 all_sprites = pygame.sprite.Group()
-tiles_group = pygame.sprite.Group()
-player_group = pygame.sprite.Group()
-pl_x = 0
-pl_y = 0
-main_pl = Player(pl_x, pl_y)
-player_group.add(main_pl)
+sprite = pygame.sprite.Sprite()
+sprite.image = load_image("mar.png", -1)
+sprite.rect = sprite.image.get_rect()
+all_sprites.add(sprite)
+
+def run_game():
+    pygame.display.set_caption('ХОХО ИТС МАРИО')
+    clock=pygame.time.Clock()
+    pygame.mouse.set_visible(1)
+    game_active=True# Этот флаг нужен для завершения главного цикла игры
+    mouse_x=0#если не добавить ошибка
+    mouse_y=0#если не добавить ошибка
+    my_simple_hero=Hero(screen)#Создание нашего персонажа, которого будем перемещать
+    all_sprites = pygame.sprite.Group()
+    sprite = pygame.sprite.Sprite()
+    sprite.image = load_image("mar.png")
+    sprite.rect = sprite.image.get_rect()
+    all_sprites.add(sprite)
 
 
-def generate_level(level):
-    x = None
-    y = None
-    for y in range(len(level)):
-        for x in range(len(level[y])):
-            if level[y][x] == '.':
-                Tile('empty', x, y)
-            elif level[y][x] == '#':
-                Tile('wall', x, y)
-            elif level[y][x] == '@':
-                Tile('empty', x, y)
+    while game_active:#Главный цикл игры. Пока флаг - истина, игра работает
+        screen.fill((255,255,255))
 
-    # вернем игрока, а также размер поля в клетках
+        for event in pygame.event.get():#получение всех событий
+            if event.type==pygame.QUIT:#проверка события "Выход"
+                game_active=False
+
+            if event.type == pygame.KEYDOWN:  # Если кнопка клавиатуры нажата, то...
+                if event.key == pygame.K_d:  # Если это кнопка вправо, то...
+                    my_simple_hero.movie_right = True  # перемещать героя вправо - Да!
+                if event.key == pygame.K_a:
+                    my_simple_hero.movie_left = True
+                if event.key == pygame.K_w:
+                    my_simple_hero.movie_forward = True
+                if event.key == pygame.K_s:
+                    my_simple_hero.movie_backward = True
+
+            if event.type == pygame.KEYUP:  # Если кнопка отжата, то...
+                if event.key == pygame.K_d:
+                    my_simple_hero.movie_right = False
+                if event.key == pygame.K_a:
+                    my_simple_hero.movie_left = False
+                if event.key == pygame.K_w:
+                    my_simple_hero.movie_forward = False
+                if event.key == pygame.K_s:
+                    my_simple_hero.movie_backward = False
+        # запуск функции нашего героя, которая меняет его расположение
+        my_simple_hero.moving()
+
+        draw_my_screen(my_simple_hero)#Эта функция рисует все объкты. Принимает в себя героя.
+
+        pygame.display.flip()
+        clock.tick(30)
+    pygame.quit()#Еслиб не добавить будет висеть окно
+
+class Hero():#Класс нашего героя
+    def __init__(self,screen,**kwargs):
+        self.screen=screen#При инициализации получает ссылку на окно, в котором рисуются все на экране
+        self.pos_x=100
+        self.pos_y=100
+        self.radius=10
+        self.color=(0,0,255)
+        #эти флажки нужны для постоянного перемещения героя
+        self.movie_left=False
+        self.movie_right=False
+        self.movie_forward=False
+        self.movie_backward=False
+
+        #границы экрана за которые герой не перемещается
+        self.max_y=800-self.radius
+        self.max_x=1200-self.radius
+
+    def moving(self):#перемещает героя
+        if self.movie_left==True:
+            self.pos_x-=5
+            if self.pos_x<self.radius:
+                self.pos_x=self.radius
+        if self.movie_right==True:
+            self.pos_x+=5
+            if self.pos_x>self.max_x:
+                self.pos_x=self.max_x
+        if self.movie_forward==True:
+            self.pos_y-=5
+            if self.pos_y<self.radius:
+                self.pos_y=self.radius
+        if self.movie_backward==True:
+            self.pos_y+=5
+            if self.pos_y>self.max_y:
+                self.pos_y=self.max_y
+        sprite.rect.x = self.pos_x
+        sprite.rect.y = self.pos_y
+
+    def draw_on_screen(self):#рисует героя
+        all_sprites.draw(screen)
 
 
 
-generate_level(load_level(name_lvl))
-
-start_screen()
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            terminate()
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_a]:
-            pl_x -= 5
-        if keys[pygame.K_w]:
-            pl_y -= 5
-        if keys[pygame.K_d]:
-            pl_x += 5
-    main_pl.move(pl_x, pl_y)
-    screen.fill("black")
-    tiles_group.draw(screen)
-    player_group.draw(screen)
-    pygame.display.update()
-    clock.tick(FPS)
+run_game()#запускаем нашу игру
