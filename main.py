@@ -4,8 +4,8 @@ import os
 
 FPS = 60
 WIDTH, HEIGHT = 550, 550
+name_lvl = "map.txt"
 
-name_lvl = input()
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -66,7 +66,6 @@ def load_level(filename):
         exit()
 
 
-
 class Tile(pygame.sprite.Sprite):
     def __init__(self, tile_type, pos_x, pos_y):
         super().__init__(tiles_group, all_sprites)
@@ -79,14 +78,13 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(player_group, all_sprites)
         self.image = player_image
-        self.rect = self.image.get_rect().move(
-            tile_width * pos_x + 15, tile_height * pos_y + 5)
+        self.rect = self.image.get_rect().move(100, 100)
         self.pos = pos_x, pos_y
 
     def move(self, x, y):
-        self.pos = x, y
-        self.rect = self.image.get_rect().move(
-            tile_width * x + 15, tile_height * y + 5)
+        self.rect.x = x
+        self.rect.y = y
+
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -99,26 +97,18 @@ tile_images = {
 player_image = load_image('mar.png', -1)
 level = load_level(name_lvl)
 tile_width = tile_height = 50
-player = None
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
-
-
-def move(obj, direction):
-    x, y = obj.pos
-    if direction == "left" and x > 0 and level[y][x - 1] != "#":
-        obj.move(x - 1, y)
-    if direction == "right" and x < level_x and level[y][x + 1] != "#":
-        obj.move(x + 1, y)
-    if direction == "up" and y > 0 and level[y - 1][x] != "#":
-        obj.move(x, y - 1)
-    if direction == "down" and y < level_y and level[y + 1][x] != "#":
-        obj.move(x, y + 1)
+pl_x = 0
+pl_y = 0
+main_pl = Player(pl_x, pl_y)
+player_group.add(main_pl)
 
 
 def generate_level(level):
-    new_player, x, y = None, None, None
+    x = None
+    y = None
     for y in range(len(level)):
         for x in range(len(level[y])):
             if level[y][x] == '.':
@@ -127,32 +117,28 @@ def generate_level(level):
                 Tile('wall', x, y)
             elif level[y][x] == '@':
                 Tile('empty', x, y)
-                new_player = Player(x, y)
+
     # вернем игрока, а также размер поля в клетках
-    return new_player, x, y
 
 
 
-
-player, level_x, level_y = generate_level(load_level(name_lvl))
+generate_level(load_level(name_lvl))
 
 start_screen()
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             terminate()
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
-                move(player, "left")
-            if event.key == pygame.K_w:
-                move(player, "up")
-            if event.key == pygame.K_d:
-                move(player, "right")
-            if event.key == pygame.K_s:
-                move(player, "down")
-
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_a]:
+            pl_x -= 5
+        if keys[pygame.K_w]:
+            pl_y -= 5
+        if keys[pygame.K_d]:
+            pl_x += 5
+    main_pl.move(pl_x, pl_y)
     screen.fill("black")
     tiles_group.draw(screen)
     player_group.draw(screen)
-    pygame.display.flip()
+    pygame.display.update()
     clock.tick(FPS)
