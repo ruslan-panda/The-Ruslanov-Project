@@ -2,7 +2,8 @@ import pygame
 import os
 
 pygame.init()
-screen=pygame.display.set_mode((1200,800))
+width, height = 1200, 800
+screen=pygame.display.set_mode((width, height))
 def draw_my_screen(my_simple_hero):
     my_simple_hero.draw_on_screen()#рисует уже обновновленного героя
 
@@ -29,8 +30,6 @@ def run_game():
     clock=pygame.time.Clock()
     pygame.mouse.set_visible(1)
     game_active=True# Этот флаг нужен для завершения главного цикла игры
-    mouse_x=0#если не добавить ошибка
-    mouse_y=0#если не добавить ошибка
     my_simple_hero=Hero(screen)#Создание нашего персонажа, которого будем перемещать
     all_sprites = pygame.sprite.Group()
     sprite = pygame.sprite.Sprite()
@@ -38,6 +37,11 @@ def run_game():
     sprite.rect = sprite.image.get_rect()
     all_sprites.add(sprite)
 
+    velocity_y = 0
+    gravity = 1
+    jump_height = -15  # Высота прыжка
+
+    is_jumping = False
 
     while game_active:#Главный цикл игры. Пока флаг - истина, игра работает
         screen.fill((255,255,255))
@@ -51,10 +55,13 @@ def run_game():
                     my_simple_hero.movie_right = True  # перемещать героя вправо - Да!
                 if event.key == pygame.K_a:
                     my_simple_hero.movie_left = True
-                if event.key == pygame.K_w:
+                if event.key == pygame.K_w and not is_jumping:
+                    velocity_y = jump_height
+                    is_jumping = True
                     my_simple_hero.movie_forward = True
                 if event.key == pygame.K_s:
                     my_simple_hero.movie_backward = True
+
 
             if event.type == pygame.KEYUP:  # Если кнопка отжата, то...
                 if event.key == pygame.K_d:
@@ -77,11 +84,13 @@ def run_game():
 class Hero():#Класс нашего героя
     def __init__(self,screen,**kwargs):
         self.screen=screen#При инициализации получает ссылку на окно, в котором рисуются все на экране
-
-        self.pos_x=100
-        self.pos_y=100
         self.radius=10
         self.color=(0,0,255)
+        self.max_x = 1200
+        self.max_y = 800
+        self.velocity_y = 0
+        self.gravity = 1
+        self.jump_height = -15  # Высота прыжка
         #эти флажки нужны для постоянного перемещения героя
         self.movie_left=False
         self.movie_right=False
@@ -92,28 +101,32 @@ class Hero():#Класс нашего героя
         all_sprites.add(sprite)
 
         #границы экрана за которые герой не перемещается
-        self.max_y=800-self.radius
-        self.max_x=1200-self.radius
+
+        self.player_width, self.player_height = 200, 200
+        self.player_x, self.player_y = width // 2 - self.player_width // 2, height - self.player_height
 
     def moving(self):#перемещает героя
+        self.velocity_y += self.gravity
+        self.player_y += self.velocity_y
         if self.movie_left==True:
-            self.pos_x-=10
-            if self.pos_x<self.radius:
-                self.pos_x=self.radius
+            self.player_x-=10
+            if self.player_x<self.radius:
+                self.player_x=self.radius
         if self.movie_right==True:
-            self.pos_x+=10
-            if self.pos_x>self.max_x:
-                self.pos_x=self.max_x
+            self.player_x+=10
+            if self.player_x>self.max_x:
+                self.player_x=self.max_x
         if self.movie_forward==True:
-            self.pos_y-=10
-            if self.pos_y<self.radius:
-                self.pos_y=self.radius
+            if self.player_y > height - self.player_height:
+                self.player_y = height - self.player_height
+                velocity_y = 0
+                is_jumping = False
         if self.movie_backward==True:
-            self.pos_y+=10
-            if self.pos_y>self.max_y:
-                self.pos_y=self.max_y
-        sprite.rect.x = self.pos_x
-        sprite.rect.y = self.pos_y
+            self.player_y+=10
+            if self.player_y>self.max_y:
+                self.player_y=self.max_y
+        sprite.rect.x = self.player_x
+        sprite.rect.y = self.player_y
 
     def draw_on_screen(self):#рисует героя
         all_sprites.draw(screen)
