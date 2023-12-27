@@ -87,14 +87,9 @@ class Hero():#Класс нашего героя
         self.movie_right=False
         self.movie_forward=False
         self.movie_backward=False
-        self.frames = []
-        self.cur_frame = 0
         spriterun1 = pygame.sprite.Sprite()
-        spriterun1.image = load_image("hero_run1.png", -1)
         spriterun1.rect = sprite.image.get_rect()
-        all_sprites.add(spriterun1)
-        self.frames.append(spriterun1)
-        self.image = self.frames[self.cur_frame]
+        all_sprites.add(sprite)
 
         #границы экрана за которые герой не перемещается
         self.max_y=800-self.radius
