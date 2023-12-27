@@ -20,7 +20,7 @@ def load_image(name, colorkey=None):
 
 all_sprites = pygame.sprite.Group()
 sprite = pygame.sprite.Sprite()
-sprite.image = load_image("mar.png", -1)
+sprite.image = load_image("hero_stop.png", -1)
 sprite.rect = sprite.image.get_rect()
 all_sprites.add(sprite)
 
@@ -77,6 +77,7 @@ def run_game():
 class Hero():#Класс нашего героя
     def __init__(self,screen,**kwargs):
         self.screen=screen#При инициализации получает ссылку на окно, в котором рисуются все на экране
+
         self.pos_x=100
         self.pos_y=100
         self.radius=10
@@ -86,6 +87,14 @@ class Hero():#Класс нашего героя
         self.movie_right=False
         self.movie_forward=False
         self.movie_backward=False
+        self.frames = []
+        self.cur_frame = 0
+        spriterun1 = pygame.sprite.Sprite()
+        spriterun1.image = load_image("hero_run1.png", -1)
+        spriterun1.rect = sprite.image.get_rect()
+        all_sprites.add(spriterun1)
+        self.frames.append(spriterun1)
+        self.image = self.frames[self.cur_frame]
 
         #границы экрана за которые герой не перемещается
         self.max_y=800-self.radius
@@ -93,19 +102,19 @@ class Hero():#Класс нашего героя
 
     def moving(self):#перемещает героя
         if self.movie_left==True:
-            self.pos_x-=5
+            self.pos_x-=10
             if self.pos_x<self.radius:
                 self.pos_x=self.radius
         if self.movie_right==True:
-            self.pos_x+=5
+            self.pos_x+=10
             if self.pos_x>self.max_x:
                 self.pos_x=self.max_x
         if self.movie_forward==True:
-            self.pos_y-=5
+            self.pos_y-=10
             if self.pos_y<self.radius:
                 self.pos_y=self.radius
         if self.movie_backward==True:
-            self.pos_y+=5
+            self.pos_y+=10
             if self.pos_y>self.max_y:
                 self.pos_y=self.max_y
         sprite.rect.x = self.pos_x
