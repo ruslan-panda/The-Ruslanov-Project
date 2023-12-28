@@ -37,15 +37,11 @@ def run_game():
     sprite.rect = sprite.image.get_rect()
     all_sprites.add(sprite)
 
-    velocity_y = 0
-    gravity = 1
-    jump_height = -15  # Высота прыжка
-
-    is_jumping = False
 
     while game_active:#Главный цикл игры. Пока флаг - истина, игра работает
         screen.fill((255,255,255))
-
+        is_jumping = vars(my_simple_hero)["is_jumping"]
+        print(is_jumping)
         for event in pygame.event.get():#получение всех событий
             if event.type==pygame.QUIT:#проверка события "Выход"
                 game_active=False
@@ -56,9 +52,10 @@ def run_game():
                 if event.key == pygame.K_a:
                     my_simple_hero.movie_left = True
                 if event.key == pygame.K_w and not is_jumping:
-                    velocity_y = jump_height
-                    is_jumping = True
                     my_simple_hero.movie_forward = True
+                    vars(my_simple_hero)["is_jumping"] = True
+                    if is_jumping:
+                        my_simple_hero.movie_forward = False
                 if event.key == pygame.K_s:
                     my_simple_hero.movie_backward = True
 
@@ -78,7 +75,7 @@ def run_game():
         draw_my_screen(my_simple_hero)#Эта функция рисует все объкты. Принимает в себя героя.
 
         pygame.display.flip()
-        clock.tick(30)
+        clock.tick(60)
     pygame.quit()#Еслиб не добавить будет висеть окно
 
 class Hero():#Класс нашего героя
@@ -89,7 +86,7 @@ class Hero():#Класс нашего героя
         self.max_x = 1200
         self.max_y = 800
         self.velocity_y = 0
-        self.gravity = 1
+        self.gravity = 2
         self.jump_height = -15  # Высота прыжка
         #эти флажки нужны для постоянного перемещения героя
         self.movie_left=False
@@ -99,15 +96,16 @@ class Hero():#Класс нашего героя
         spriterun1 = pygame.sprite.Sprite()
         spriterun1.rect = sprite.image.get_rect()
         all_sprites.add(sprite)
+        self.is_jumping = False
+
 
         #границы экрана за которые герой не перемещается
 
-        self.player_width, self.player_height = 200, 200
+        self.player_width, self.player_height = 115, 160
         self.player_x, self.player_y = width // 2 - self.player_width // 2, height - self.player_height
 
+
     def moving(self):#перемещает героя
-        self.velocity_y += self.gravity
-        self.player_y += self.velocity_y
         if self.movie_left==True:
             self.player_x-=10
             if self.player_x<self.radius:
@@ -117,10 +115,7 @@ class Hero():#Класс нашего героя
             if self.player_x>self.max_x:
                 self.player_x=self.max_x
         if self.movie_forward==True:
-            if self.player_y > height - self.player_height:
-                self.player_y = height - self.player_height
-                velocity_y = 0
-                is_jumping = False
+            self.velocity_y = self.jump_height
         if self.movie_backward==True:
             self.player_y+=10
             if self.player_y>self.max_y:
@@ -129,6 +124,14 @@ class Hero():#Класс нашего героя
         sprite.rect.y = self.player_y
 
     def draw_on_screen(self):#рисует героя
+        self.velocity_y += self.gravity
+        self.player_y += self.velocity_y
+        if self.player_y >= height - self.player_height:
+            self.player_y = height - self.player_height
+            velocity_y = 0
+            self.is_jumping = False
+
+
         all_sprites.draw(screen)
 
 
