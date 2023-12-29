@@ -1,139 +1,98 @@
 import pygame
-import os
+import sys
 
 pygame.init()
-width, height = 1200, 800
-screen=pygame.display.set_mode((width, height))
-def draw_my_screen(my_simple_hero):
-    my_simple_hero.draw_on_screen()#рисует уже обновновленного героя
 
+width, height = 800, 600
+white = (255, 255, 255)
 
-def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
-    image = pygame.image.load(fullname).convert()
-    if colorkey is not None:
-        if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey)
+screen = pygame.display.set_mode((width, height))
+pygame.display.set_caption("Анимация бега в Pygame")
+
+running_image_1 = pygame.image.load("3.png")
+running_image_2 = pygame.image.load("4.png")
+running_image_3 = pygame.image.load("5.png")
+
+standing_image_1 = pygame.image.load("1.png")
+standing_image_2 = pygame.image.load("2.png")
+
+flipped_running_image_1 = pygame.transform.flip(running_image_1, True, False)
+flipped_running_image_2 = pygame.transform.flip(running_image_2, True, False)
+flipped_running_image_3 = pygame.transform.flip(running_image_3, True, False)
+
+player_width, player_height = 50, 160
+player_x, player_y = width // 2 - player_width // 2, height - player_height
+
+velocity_y = 0
+gravity = 1
+jump_height = -15
+
+is_jumping = False
+is_running = False
+is_facing_left = False
+running_animation_counter = 0
+standing_animation_counter = 0
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE and not is_jumping:
+                velocity_y = jump_height
+                is_jumping = True
+                is_running = False
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT] and player_x > 0:
+        player_x -= 5
+        is_running = True
+        is_facing_left = True
+    elif keys[pygame.K_RIGHT] and player_x < width - player_width:
+        player_x += 5
+        is_running = True
+        is_facing_left = False
     else:
-        image = image.convert_alpha()
-    return image
+        is_running = False
 
-all_sprites = pygame.sprite.Group()
-sprite = pygame.sprite.Sprite()
-sprite.image = load_image("hero_stop.png", -1)
-sprite.rect = sprite.image.get_rect()
-all_sprites.add(sprite)
+    velocity_y += gravity
+    player_y += velocity_y
 
-def run_game():
-    pygame.display.set_caption('ХОХО ИТС МАРИО')
-    clock=pygame.time.Clock()
-    pygame.mouse.set_visible(1)
-    game_active=True# Этот флаг нужен для завершения главного цикла игры
-    my_simple_hero=Hero(screen)#Создание нашего персонажа, которого будем перемещать
-    all_sprites = pygame.sprite.Group()
-    sprite = pygame.sprite.Sprite()
-    sprite.image = load_image("mar.png")
-    sprite.rect = sprite.image.get_rect()
-    all_sprites.add(sprite)
+    if player_y > height - player_height:
+        player_y = height - player_height
+        velocity_y = 0
+        is_jumping = False
 
+    screen.fill(white)
+    if is_running:
+        running_animation_counter += 1
+        standing_animation_counter = 0
+        if running_animation_counter % 18 < 6:
+            if is_facing_left:
+                screen.blit(flipped_running_image_1, (player_x, player_y))
+            else:
+                screen.blit(running_image_1, (player_x, player_y))
+        elif 6 <= running_animation_counter % 18 < 12:
+            if is_facing_left:
+                screen.blit(flipped_running_image_2, (player_x, player_y))
+            else:
+                screen.blit(running_image_2, (player_x, player_y))
+        else:
+            if is_facing_left:
+                screen.blit(flipped_running_image_3, (player_x, player_y))
+            else:
+                screen.blit(running_image_3, (player_x, player_y))
+    else:
+        standing_animation_counter += 0.7
+        if standing_animation_counter % 18 < 6:
+            screen.blit(standing_image_1, (player_x, player_y))
+        elif 6 <= standing_animation_counter % 18 < 12:
+            screen.blit(standing_image_2, (player_x, player_y))
+        else:
+            screen.blit(standing_image_1, (player_x, player_y))
 
-    while game_active:#Главный цикл игры. Пока флаг - истина, игра работает
-        screen.fill((255,255,255))
-        is_jumping = vars(my_simple_hero)["is_jumping"]
-        print(is_jumping)
-        for event in pygame.event.get():#получение всех событий
-            if event.type==pygame.QUIT:#проверка события "Выход"
-                game_active=False
+    pygame.display.flip()
+    pygame.time.Clock().tick(60)
 
-            if event.type == pygame.KEYDOWN:  # Если кнопка клавиатуры нажата, то...
-                if event.key == pygame.K_d:  # Если это кнопка вправо, то...
-                    my_simple_hero.movie_right = True  # перемещать героя вправо - Да!
-                if event.key == pygame.K_a:
-                    my_simple_hero.movie_left = True
-                if event.key == pygame.K_w and not is_jumping:
-                    my_simple_hero.movie_forward = True
-                    vars(my_simple_hero)["is_jumping"] = True
-                    if is_jumping:
-                        my_simple_hero.movie_forward = False
-                if event.key == pygame.K_s:
-                    my_simple_hero.movie_backward = True
-
-
-            if event.type == pygame.KEYUP:  # Если кнопка отжата, то...
-                if event.key == pygame.K_d:
-                    my_simple_hero.movie_right = False
-                if event.key == pygame.K_a:
-                    my_simple_hero.movie_left = False
-                if event.key == pygame.K_w:
-                    my_simple_hero.movie_forward = False
-                if event.key == pygame.K_s:
-                    my_simple_hero.movie_backward = False
-        # запуск функции нашего героя, которая меняет его расположение
-        my_simple_hero.moving()
-
-        draw_my_screen(my_simple_hero)#Эта функция рисует все объкты. Принимает в себя героя.
-
-        pygame.display.flip()
-        clock.tick(60)
-    pygame.quit()#Еслиб не добавить будет висеть окно
-
-class Hero():#Класс нашего героя
-    def __init__(self,screen,**kwargs):
-        self.screen=screen#При инициализации получает ссылку на окно, в котором рисуются все на экране
-        self.radius=10
-        self.color=(0,0,255)
-        self.max_x = 1200
-        self.max_y = 800
-        self.velocity_y = 0
-        self.gravity = 2
-        self.jump_height = -15  # Высота прыжка
-        #эти флажки нужны для постоянного перемещения героя
-        self.movie_left=False
-        self.movie_right=False
-        self.movie_forward=False
-        self.movie_backward=False
-        spriterun1 = pygame.sprite.Sprite()
-        spriterun1.rect = sprite.image.get_rect()
-        all_sprites.add(sprite)
-        self.is_jumping = False
-
-
-        #границы экрана за которые герой не перемещается
-
-        self.player_width, self.player_height = 115, 160
-        self.player_x, self.player_y = width // 2 - self.player_width // 2, height - self.player_height
-
-
-    def moving(self):#перемещает героя
-        if self.movie_left==True:
-            self.player_x-=10
-            if self.player_x<self.radius:
-                self.player_x=self.radius
-        if self.movie_right==True:
-            self.player_x+=10
-            if self.player_x>self.max_x:
-                self.player_x=self.max_x
-        if self.movie_forward==True:
-            self.velocity_y = self.jump_height
-        if self.movie_backward==True:
-            self.player_y+=10
-            if self.player_y>self.max_y:
-                self.player_y=self.max_y
-        sprite.rect.x = self.player_x
-        sprite.rect.y = self.player_y
-
-    def draw_on_screen(self):#рисует героя
-        self.velocity_y += self.gravity
-        self.player_y += self.velocity_y
-        if self.player_y >= height - self.player_height:
-            self.player_y = height - self.player_height
-            velocity_y = 0
-            self.is_jumping = False
-
-
-        all_sprites.draw(screen)
-
-
-
-run_game()#запускаем нашу игру
+pygame.quit()
