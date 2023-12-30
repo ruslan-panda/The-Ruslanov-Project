@@ -1,50 +1,40 @@
 import pygame
-import sys
 
+import pygame_widgets
+from pygame_widgets.button import Button
+
+# Set up Pygame
 pygame.init()
+win = pygame.display.set_mode((600, 600))
+click = False
+# Creates the button with optional parameters
+button = Button(
+    # Mandatory Parameters
+    win,  # Surface to place button on
+    100,  # X-coordinate of top left corner
+    100,  # Y-coordinate of top left corner
+    300,  # Width
+    150,  # Height
 
-width, height = 800, 600
-white = (255, 255, 255)
-black = (0, 0, 0)
+    # Optional Parameters
+    inactiveColour=(200, 50, 0, 255),  # Colour of button when not being interacted with
+    hoverColour=(150, 0, 0, 255),  # Colour of button when being hovered over
+    pressedColour=(0, 200, 20, 255),  # Colour of button when being clicked
+    image=pygame.image.load("1.png"),
+    onClick=lambda: print(234567890),  # Function to call when clicked on
+    shadowDistance=255
+)
 
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Гравитация и Прыжок в Pygame")
-
-player_width, player_height = 50, 50
-player_x, player_y = width // 2 - player_width // 2, height - player_height
-
-velocity_y = 0
-gravity = 1
-jump_height = -15  # Высота прыжка
-
-is_jumping = False
-
-while True:
-    for event in pygame.event.get():
+run = True
+while run:
+    events = pygame.event.get()
+    for event in events:
         if event.type == pygame.QUIT:
             pygame.quit()
-            sys.exit()
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE and not is_jumping:
-                velocity_y = jump_height
-                is_jumping = True
+            run = False
+            quit()
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] and player_x > 0:
-        player_x -= 5
-    if keys[pygame.K_RIGHT] and player_x < width - player_width:
-        player_x += 5
+    win.fill((255, 255, 255))
 
-    velocity_y += gravity
-    player_y += velocity_y
-
-    if player_y > height - player_height:
-        player_y = height - player_height
-        velocity_y = 0
-        is_jumping = False
-
-    screen.fill(white)
-    pygame.draw.rect(screen, black, (player_x, player_y, player_width, player_height))
-    pygame.display.flip()
-
-    pygame.time.Clock().tick(60)
+    pygame_widgets.update(events)  # Call once every loop to allow widgets to render and listen
+    pygame.display.update()

@@ -1,5 +1,8 @@
 import pygame
 import sys
+import os
+import pygame_widgets
+from pygame_widgets.button import Button
 
 pygame.init()
 
@@ -15,6 +18,8 @@ running_image_3 = pygame.image.load("5.png")
 
 standing_image_1 = pygame.image.load("1.png")
 standing_image_2 = pygame.image.load("2.png")
+
+background_image = pygame.image.load("background.png")
 
 flipped_running_image_1 = pygame.transform.flip(running_image_1, True, False)
 flipped_running_image_2 = pygame.transform.flip(running_image_2, True, False)
@@ -33,23 +38,67 @@ is_facing_left = False
 running_animation_counter = 0
 standing_animation_counter = 0
 
+
+def load_image(name, colorkey=None):
+    fullname = os.path.join('data', name)
+    image = pygame.image.load(fullname).convert()
+    if colorkey is not None:
+        if colorkey == -1:
+            colorkey = image.get_at((0, 0))
+        image.set_colorkey(colorkey)
+    else:
+        image = image.convert_alpha()
+    return image
+
+
+def start_screen():
+    fon = pygame.transform.scale(load_image('start_game.png'), (width, height))
+    screen.blit(fon, (0, 0))
+    button = Button(
+        # Mandatory Parameters
+        screen,  # Surface to place button on
+        250,  # X-coordinate of top left corner
+        200,  # Y-coordinate of top left corner
+        300,  # Width
+        150,  # Height
+
+        # Optional Parameters
+        inactiveColour=(200, 50, 0, 255),  # Colour of button when not being interacted with
+        hoverColour=(150, 0, 0, 255),  # Colour of button when being hovered over
+        pressedColour=(0, 200, 20, 255),  # Colour of button when being clicked
+
+    )
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if button.clicked:
+                return
+        pygame_widgets.update(event)  # Call once every loop to allow widgets to render and listen
+        pygame.display.flip()
+
+
+
+start_screen()
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE and not is_jumping:
+            if event.key == pygame.K_w and not is_jumping:
                 velocity_y = jump_height
                 is_jumping = True
                 is_running = False
 
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] and player_x > 0:
+    if keys[pygame.K_a] and player_x > 0:
         player_x -= 5
         is_running = True
         is_facing_left = True
-    elif keys[pygame.K_RIGHT] and player_x < width - player_width:
+    elif keys[pygame.K_d] and player_x < width - player_width:
         player_x += 5
         is_running = True
         is_facing_left = False
@@ -93,6 +142,7 @@ while True:
             screen.blit(standing_image_1, (player_x, player_y))
 
     pygame.display.flip()
+
     pygame.time.Clock().tick(60)
 
 pygame.quit()
