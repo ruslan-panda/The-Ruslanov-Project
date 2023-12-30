@@ -1,24 +1,38 @@
 import pygame
 import sys
+import os
 
 pygame.init()
 
-width, height = 800, 600
+
+def load_image(name, colorkey=None):
+    fullname = os.path.join('data', name)
+    image = pygame.image.load(fullname).convert()
+    if colorkey is not None:
+        if colorkey == -1:
+            colorkey = image.get_at((0, 0))
+        image.set_colorkey(colorkey)
+    else:
+        image = image.convert_alpha()
+    return image
+
+
+width, height = 1500, 800
 white = (255, 255, 255)
 
 screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Анимация бега в Pygame")
+pygame.display.set_caption("Игра")
 
-running_image_1 = pygame.image.load("3.png")
-running_image_2 = pygame.image.load("4.png")
-running_image_3 = pygame.image.load("5.png")
+running_1 = pygame.image.load("3.png")
+running_2 = pygame.image.load("4.png")
+running_3 = pygame.image.load("5.png")
 
-standing_image_1 = pygame.image.load("1.png")
-standing_image_2 = pygame.image.load("2.png")
+standing_1 = pygame.image.load("1.png")
+standing_2 = pygame.image.load("2.png")
 
-flipped_running_image_1 = pygame.transform.flip(running_image_1, True, False)
-flipped_running_image_2 = pygame.transform.flip(running_image_2, True, False)
-flipped_running_image_3 = pygame.transform.flip(running_image_3, True, False)
+flipped_running_1 = pygame.transform.flip(running_1, True, False)
+flipped_running_2 = pygame.transform.flip(running_2, True, False)
+flipped_running_3 = pygame.transform.flip(running_3, True, False)
 
 player_width, player_height = 50, 160
 player_x, player_y = width // 2 - player_width // 2, height - player_height
@@ -30,8 +44,8 @@ jump_height = -15
 is_jumping = False
 is_running = False
 is_facing_left = False
-running_animation_counter = 0
-standing_animation_counter = 0
+running_k = 0
+standing_k = 0
 
 while True:
     for event in pygame.event.get():
@@ -66,31 +80,31 @@ while True:
 
     screen.fill(white)
     if is_running:
-        running_animation_counter += 1
-        standing_animation_counter = 0
-        if running_animation_counter % 18 < 6:
+        running_k += 1
+        standing_k = 0
+        if running_k % 18 < 6:
             if is_facing_left:
-                screen.blit(flipped_running_image_1, (player_x, player_y))
+                screen.blit(flipped_running_1, (player_x, player_y))
             else:
-                screen.blit(running_image_1, (player_x, player_y))
-        elif 6 <= running_animation_counter % 18 < 12:
+                screen.blit(running_1, (player_x, player_y))
+        elif 6 <= running_k % 18 < 12:
             if is_facing_left:
-                screen.blit(flipped_running_image_2, (player_x, player_y))
+                screen.blit(flipped_running_2, (player_x, player_y))
             else:
-                screen.blit(running_image_2, (player_x, player_y))
+                screen.blit(running_2, (player_x, player_y))
         else:
             if is_facing_left:
-                screen.blit(flipped_running_image_3, (player_x, player_y))
+                screen.blit(flipped_running_3, (player_x, player_y))
             else:
-                screen.blit(running_image_3, (player_x, player_y))
+                screen.blit(running_3, (player_x, player_y))
     else:
-        standing_animation_counter += 0.7
-        if standing_animation_counter % 18 < 6:
-            screen.blit(standing_image_1, (player_x, player_y))
-        elif 6 <= standing_animation_counter % 18 < 12:
-            screen.blit(standing_image_2, (player_x, player_y))
+        standing_k += 0.7
+        if standing_k % 18 < 6:
+            screen.blit(standing_1, (player_x, player_y))
+        elif 6 <= standing_k % 18 < 12:
+            screen.blit(standing_2, (player_x, player_y))
         else:
-            screen.blit(standing_image_1, (player_x, player_y))
+            screen.blit(standing_1, (player_x, player_y))
 
     pygame.display.flip()
     pygame.time.Clock().tick(60)
