@@ -146,3 +146,4 @@ while True:
     pygame.time.Clock().tick(60)
 
 pygame.quit()
+print(1234)
