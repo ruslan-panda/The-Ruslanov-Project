@@ -5,30 +5,18 @@ import os
 pygame.init()
 
 
-def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
-    image = pygame.image.load(fullname).convert()
-    if colorkey is not None:
-        if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey)
-    else:
-        image = image.convert_alpha()
-    return image
-
-
 width, height = 1500, 800
 white = (255, 255, 255)
 
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Игра")
 
-running_1 = pygame.image.load("3.png")
-running_2 = pygame.image.load("4.png")
-running_3 = pygame.image.load("5.png")
+running_1 = pygame.image.load("data/3.png")
+running_2 = pygame.image.load("data/4.png")
+running_3 = pygame.image.load("data/5.png")
 
-standing_1 = pygame.image.load("1.png")
-standing_2 = pygame.image.load("2.png")
+standing_1 = pygame.image.load("data/1.png")
+standing_2 = pygame.image.load("data/2.png")
 
 flipped_running_1 = pygame.transform.flip(running_1, True, False)
 flipped_running_2 = pygame.transform.flip(running_2, True, False)
