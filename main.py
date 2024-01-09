@@ -6,7 +6,7 @@ from pygame_widgets.button import Button
 
 pygame.init()
 
-width, height = 800, 600
+width, height = 1500, 800
 white = (255, 255, 255)
 
 screen = pygame.display.set_mode((width, height))
@@ -57,14 +57,18 @@ def start_screen():
     button = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
-        250,  # X-coordinate of top left corner
-        200,  # Y-coordinate of top left corner
-        300,  # Width
+        550,  # X-coordinate of top left corner
+        250,  # Y-coordinate of top left corner
+        400,  # Width
         150,  # Height
 
         # Optional Parameters
-        inactiveColour=(200, 50, 0, 255),  # Colour of button when not being interacted with
-        hoverColour=(150, 0, 0, 255),  # Colour of button when being hovered over
+        text='Начать игру',  # Text to display
+        fontSize=50,  # Size of font
+        radius=10,
+        textColour=(255, 255, 255, 255),
+        inactiveColour=(118, 174, 99, 255),  # Colour of button when not being interacted with
+        hoverColour=(120, 160, 99, 255),  # Colour of button when being hovered over
         pressedColour=(0, 200, 20, 255),  # Colour of button when being clicked
 
     )
