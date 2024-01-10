@@ -19,7 +19,6 @@ running_image_3 = pygame.image.load("5.png")
 standing_image_1 = pygame.image.load("1.png")
 standing_image_2 = pygame.image.load("2.png")
 
-background_image = pygame.image.load("background.png")
 
 flipped_running_image_1 = pygame.transform.flip(running_image_1, True, False)
 flipped_running_image_2 = pygame.transform.flip(running_image_2, True, False)
