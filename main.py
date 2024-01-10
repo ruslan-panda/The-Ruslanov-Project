@@ -83,8 +83,40 @@ def start_screen():
         pygame.display.flip()
 
 
+def level_selection():
+    fon = pygame.transform.scale(load_image('start_game.png'), (width, height))
+    screen.blit(fon, (0, 0))
+    button = Button(
+        # Mandatory Parameters
+        screen,  # Surface to place button on
+        550,  # X-coordinate of top left corner
+        250,  # Y-coordinate of top left corner
+        400,  # Width
+        150,  # Height
+
+        # Optional Parameters
+        text='Начать игру2',  # Text to display
+        fontSize=50,  # Size of font
+        radius=10,
+        textColour=(255, 255, 255, 255),
+        inactiveColour=(118, 174, 99, 255),  # Colour of button when not being interacted with
+        hoverColour=(120, 160, 99, 255),  # Colour of button when being hovered over
+        pressedColour=(0, 200, 20, 255),  # Colour of button when being clicked
+
+    )
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if button.clicked:
+                return
+            pygame_widgets.update(event)  # Call once every loop to allow widgets to render and listen
+            pygame.display.flip()
+
 
 start_screen()
+level_selection()
 
 while True:
     for event in pygame.event.get():
