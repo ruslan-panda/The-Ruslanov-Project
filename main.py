@@ -79,8 +79,8 @@ def start_screen():
                 sys.exit()
             if button.clicked:
                 return
-        pygame_widgets.update(event)  # Call once every loop to allow widgets to render and listen
-        pygame.display.flip()
+            pygame_widgets.update(event)  # Call once every loop to allow widgets to render and listen
+            pygame.display.flip()
 
 
 def level_selection():
