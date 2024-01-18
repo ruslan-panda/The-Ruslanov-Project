@@ -156,7 +156,7 @@ def game1():
     displaysurface = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Game")
 
-    background = pygame.image.load("background.png")
+    background = pygame.image.load("bg.jpg")
 
     class Player(pygame.sprite.Sprite):
         def __init__(self):
@@ -337,8 +337,7 @@ def game1():
                 displaysurface.fill((255, 0, 0))
                 pygame.display.update()
                 time.sleep(1)
-                pygame.quit()
-                sys.exit()
+
 
         if P1.rect.top <= HEIGHT / 3:
             P1.pos.y += abs(P1.vel.y)
