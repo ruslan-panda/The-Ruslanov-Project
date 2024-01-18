@@ -7,139 +7,6 @@ import os
 import pygame_widgets
 from pygame_widgets.button import Button
 
-pygame.init()
-
-width, height = 1500, 800
-white = (255, 255, 255)
-
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Анимация бега в Pygame")
-
-
-def load_image(name, colorkey=None):
-    fullname = os.path.join('', name)
-    image = pygame.image.load(fullname).convert()
-    if colorkey is not None:
-        if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey)
-    else:
-        image = image.convert_alpha()
-    return image
-
-
-def start_screen():
-    fon = pygame.transform.scale(load_image('bg.jpg'), (width, height))
-    but = pygame.image.load("button.png")
-    screen.blit(fon, (0, 0))
-    button = Button(
-        # Mandatory Parameters
-        screen,  # Surface to place button on
-
-        410,  # X-coordinate of top left corner
-        240,  # Y-coordinate of top left corner
-        310,  # Width
-        120,  # Height
-
-        # Optional Parameters
-        image=but,
-        inactiveColour=(118, 174, 99, 255),  # Colour of button when not being interacted with
-        hoverColour=(120, 160, 99, 0),  # Colour of button when being hovered over
-        pressedColour=(0, 200, 20, 0),  # Colour of button when being clicked
-
-    )
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if button.clicked:
-                return
-            pygame_widgets.update(event)  # Call once every loop to allow widgets to render and listen
-            pygame.display.flip()
-
-g1 = False
-g2 = False
-g3 = False
-def level_selection():
-    global g1, g2, g3
-    fon = pygame.transform.scale(load_image('start_game.png'), (width, height))
-    screen.blit(fon, (0, 0))
-    button1 = Button(
-        # Mandatory Parameters
-        screen,  # Surface to place button on
-        100,  # X-coordinate of top left corner
-        250,  # Y-coordinate of top left corner
-        400,  # Width
-        150,  # Height
-
-        # Optional Parameters
-        text='Легкий',  # Text to display
-        fontSize=50,  # Size of font
-        radius=10,
-        textColour=(255, 255, 255, 255),
-        inactiveColour=(0, 204, 0, 255),  # Colour of button when not being interacted with
-        hoverColour=(0, 102, 0, 255),  # Colour of button when being hovered over
-        pressedColour=(0, 102, 0, 255),  # Colour of button when being clicked
-
-    )
-    button2 = Button(
-        # Mandatory Parameters
-        screen,  # Surface to place button on
-        550,  # X-coordinate of top left corner
-        250,  # Y-coordinate of top left corner
-        400,  # Width
-        150,  # Height
-
-        # Optional Parameters
-        text='Средний',  # Text to display
-        fontSize=50,  # Size of font
-        radius=10,
-        textColour=(255, 255, 255, 255),
-        inactiveColour=(204, 204, 0, 255),  # Colour of button when not being interacted with
-        hoverColour=(102, 102, 0, 255),  # Colour of button when being hovered over
-        pressedColour=(102, 102, 0, 255),  # Colour of button when being clicked
-
-    )
-    button3 = Button(
-        # Mandatory Parameters
-        screen,  # Surface to place button on
-        1000,  # X-coordinate of top left corner
-        250,  # Y-coordinate of top left corner
-        400,  # Width
-        150,  # Height
-
-        # Optional Parameters
-        text='Сложный',  # Text to display
-        fontSize=50,  # Size of font
-        radius=10,
-        textColour=(255, 255, 255, 255),
-        inactiveColour=(204, 0, 0, 255),  # Colour of button when not being interacted with
-        hoverColour=(102, 0, 0, 255),  # Colour of button when being hovered over
-        pressedColour=(102, 0, 0, 255),  # Colour of button when being clicked
-
-    )
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if button1.clicked:
-                g1 = True
-                return
-            if button2.clicked:
-                g2 = True
-                return
-            if button3.clicked:
-                g3 = True
-                return
-            pygame_widgets.update(event)  # Call once every loop to allow widgets to render and listen
-            pygame.display.flip()
-
-
-start_screen()
-level_selection()
-
 
 def game1():
     pygame.init()
@@ -175,9 +42,9 @@ def game1():
 
             pressed_keys = pygame.key.get_pressed()
 
-            if pressed_keys[K_a]:
+            if pressed_keys[K_LEFT]:
                 self.acc.x = -ACC
-            if pressed_keys[K_d]:
+            if pressed_keys[K_RIGHT]:
                 self.acc.x = ACC
 
             self.acc.x += self.vel.x * FRIC
@@ -324,10 +191,10 @@ def game1():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w:
+                if event.key == pygame.K_SPACE:
                     P1.jump()
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_w:
+                if event.key == pygame.K_SPACE:
                     P1.cancel_jump()
 
         if P1.rect.top > HEIGHT:
@@ -369,10 +236,4 @@ def game1():
         pygame.display.update()
         FramePerSec.tick(FPS)
 
-print(g1)
-if g1:
-    game1()
-if g2:
-    pass
-if g3:
-    pass
+game1()
