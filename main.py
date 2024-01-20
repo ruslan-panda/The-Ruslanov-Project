@@ -8,8 +8,6 @@ import pygame_widgets
 from pygame_widgets.button import Button
 
 
-
-
 def load_image(name, colorkey=None):
     fullname = os.path.join('', name)
     image = pygame.image.load(fullname).convert()
@@ -21,9 +19,12 @@ def load_image(name, colorkey=None):
         image = image.convert_alpha()
     return image
 
+
 g1 = False
 g2 = False
 g3 = False
+
+
 def start_screen():
     global s1, s2
     s1 = True
@@ -70,11 +71,10 @@ def start_screen():
 def game1():
     global g1
     pygame.init()
-    vec = pygame.math.Vector2  # 2 for two dimensional
+    vec = pygame.math.Vector2
 
-
-    HEIGHT = 450
-    WIDTH = 400
+    HEIGHT = 600
+    WIDTH = 550
     ACC = 0.5
     FRIC = -0.12
     FPS = 60
@@ -87,7 +87,6 @@ def game1():
     global g1
     background = pygame.image.load("bg.jpg")
     otd = pygame.image.load("mr.png")
-
 
     class Player(pygame.sprite.Sprite):
         def __init__(self):
@@ -206,7 +205,7 @@ def game1():
             C = False
 
     def plat_gen():
-        while len(platforms) < 6:
+        while len(platforms) < 8:
             width = random.randrange(50, 100)
             p = None
             C = True
@@ -225,10 +224,7 @@ def game1():
     platforms = pygame.sprite.Group()
     coins = pygame.sprite.Group()
 
-
     PT1 = platform(1400, 80)
-    # PT1.surf = pygame.Surface((WIDTH, 20))
-    # PT1.surf.fill((255,0,0))
     PT1.rect = PT1.surf.get_rect(center=(WIDTH / 2, HEIGHT - 10))
     PT1.moving = False
     PT1.point = False
@@ -252,21 +248,20 @@ def game1():
     run = True
 
     button_zak = Button(
-        # Mandatory Parameters
-        displaysurface,  # Surface to place button on
-        100,  # X-coordinate of top left corner
-        250,  # Y-coordinate of top left corner
-        400,  # Width
-        150,  # Height
+        displaysurface,
+        100,
+        250,
+        400,
+        150,
 
-        # Optional Parameters
-        text='Легкий',  # Text to display
-        fontSize=50,  # Size of font
+
+        text='Легкий',
+        fontSize=50,
         radius=10,
         textColour=(255, 255, 255, 255),
-        inactiveColour=(0, 204, 0, 255),  # Colour of button when not being interacted with
-        hoverColour=(0, 102, 0, 255),  # Colour of button when being hovered over
-        pressedColour=(0, 102, 0, 255),  # Colour of button when being clicked
+        inactiveColour=(0, 204, 0, 255),
+        hoverColour=(0, 102, 0, 255),
+        pressedColour=(0, 102, 0, 255),
 
     )
 
@@ -282,9 +277,6 @@ def game1():
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_w:
                     P1.cancel_jump()
-
-
-
 
         if P1.rect.top <= HEIGHT / 3:
             P1.pos.y += abs(P1.vel.y)
@@ -329,12 +321,8 @@ def game1():
             level_selection()
             return
 
-
         if button_zak.clicked:
             level_selection()
-
-
-
 
         pygame.display.update()
         FramePerSec.tick(FPS)
@@ -426,7 +414,6 @@ def level_selection():
             pygame_widgets.update(event)  # Call once every loop to allow widgets to render and listen
             pygame.display.flip()
 
+
 start_screen()
 level_selection()
-
-
