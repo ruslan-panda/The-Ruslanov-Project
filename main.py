@@ -236,7 +236,7 @@ def game1():
     all_sprites.add(P1)
     platforms.add(PT1)
 
-    for x in range(random.randint(4, 5)):
+    for x in range(random.randint(5, 10)):
         C = True
         pl = platform()
         while C:
@@ -530,20 +530,21 @@ def game2():
 
     waiting = True
     while waiting:
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 waiting = False
-            if button_zan.clicked:
-                waiting = False
-                game2()
-                return
-            if button_sel.clicked:
-                waiting = False
-                level_selection()
-                return
 
-            pygame_widgets.update(event)  # Call once every loop to allow widgets to render and listen
-            pygame.display.flip()
+        pygame_widgets.update(events)  # Call once every loop to allow widgets to render and listen
+        pygame.display.update()
+        if button_sel.clicked:
+            button_sel = None
+            button_zan = None
+            level_selection()
+            return
+        if button_zan.clicked:
+            game2()
+            return
 
     pygame.quit()
     sys.exit()
@@ -622,18 +623,27 @@ def level_selection():
                 sys.exit()
             if button1.clicked:
                 g1 = True
+                button1 = 0
+                button2 = 0
+                button3 = 0
                 game1()
                 return
             if button2.clicked:
                 g2 = True
+                button1 = 0
+                button2 = 0
+                button3 = 0
                 game2()
                 return
             if button3.clicked:
                 g3 = True
-
+                button1 = 0
+                button2 = 0
+                button3 = 0
+                level_selection()
                 return
             pygame_widgets.update(event)  # Call once every loop to allow widgets to render and listen
-            pygame.display.flip()
+            pygame.display.update()
 
 
 start_screen()
