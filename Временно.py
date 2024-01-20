@@ -1,5 +1,9 @@
-import pymorphy2
+import sqlite3
 
-number = 3
-p = morph.parse("студент")[0]
-print(f"{number} {p.make_agree_with_number(int(number)).word}")
+with sqlite3.connect("journeys.db") as con:
+    cur = con.cursor()
+    result = cur.execute("""SELECT * FROM the_best
+                    """)
+    con.commit()
+for i in result:
+    print(i)
