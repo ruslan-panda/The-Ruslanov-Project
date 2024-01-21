@@ -7,6 +7,7 @@ import os
 import pygame_widgets
 from pygame_widgets.button import Button
 import pymorphy2
+import sqlite3
 
 
 def load_image(name, colorkey=None):
@@ -84,6 +85,8 @@ def game1():
 
     displaysurface = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Game")
+
+
 
     global g1
     background = pygame.image.load("bg.jpg")
@@ -213,7 +216,7 @@ def game1():
 
             while C:
                 p = platform()
-                p.rect.center = (random.randrange(0, WIDTH - width),
+                p.rect.center = (random.randrange(0, 1),
                                  random.randrange(-50, 0))
                 C = check(p, platforms)
 
@@ -236,7 +239,7 @@ def game1():
     all_sprites.add(P1)
     platforms.add(PT1)
 
-    for x in range(random.randint(5, 10)):
+    for x in range(random.randint(5, 6)):
         C = True
         pl = platform()
         while C:
@@ -300,6 +303,13 @@ def game1():
             text_rect = g.get_rect(center=(WIDTH / 2, HEIGHT / 2))
             displaysurface.blit(g, text_rect)
             pygame.display.update()
+            with sqlite3.connect("journeys.db") as con:
+                cur = con.cursor()
+                result = cur.execute(f"""UPDATE the_best
+                                        SET first = {P1.score}
+                                        WHERE first < {P1.score}
+                                """)
+                con.commit()
             time.sleep(5)
             level_selection()
             return
@@ -545,6 +555,13 @@ def game2():
         if button_zan.clicked:
             game2()
             return
+        with sqlite3.connect("journeys.db") as con:
+            cur = con.cursor()
+            result = cur.execute(f"""UPDATE the_best
+                                    SET second = {score.score}
+                                    WHERE second < {score.score}
+                            """)
+            con.commit()
 
     pygame.quit()
     sys.exit()
@@ -558,6 +575,14 @@ def level_selection():
 
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Анимация бега в Pygame")
+
+    with sqlite3.connect("journeys.db") as con:
+        cur = con.cursor()
+        result = cur.execute("""SELECT * FROM the_best
+                        """)
+        con.commit()
+    for i in result:
+        a = i
 
     global g1, g2, g3
     fon = pygame.transform.scale(load_image('start_game.png'), (width, height))
@@ -617,6 +642,15 @@ def level_selection():
 
     )
     while True:
+        f = pygame.font.SysFont("Verdana", 20)
+        g = f.render(f"{a[0]}", True, (123, 255, 0))
+        screen.blit(g, (50, 50))
+        f = pygame.font.SysFont("Verdana", 20)
+        g = f.render(f"{a[1]}", True, (123, 255, 0))
+        screen.blit(g, (100, 50))
+        f = pygame.font.SysFont("Verdana", 20)
+        g = f.render(f"{a[2]}", True, (123, 255, 0))
+        screen.blit(g, (150, 50))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -644,6 +678,15 @@ def level_selection():
                 return
             pygame_widgets.update(event)  # Call once every loop to allow widgets to render and listen
             pygame.display.update()
+        f = pygame.font.SysFont("Verdana", 20)
+        g = f.render(f"{a[0]}", True, (123, 255, 0))
+        screen.blit(g, (50, 50))
+        f = pygame.font.SysFont("Verdana", 20)
+        g = f.render(f"{a[1]}", True, (123, 255, 0))
+        screen.blit(g, (100, 50))
+        f = pygame.font.SysFont("Verdana", 20)
+        g = f.render(f"{a[2]}", True, (123, 255, 0))
+        screen.blit(g, (150, 50))
 
 
 start_screen()
