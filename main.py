@@ -38,31 +38,61 @@ def start_screen():
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Анимация бега в Pygame")
 
-    fon = pygame.transform.scale(load_image('bg.jpg'), (width, height))
-    but = pygame.image.load("button.png")
+    fon = pygame.transform.scale(load_image('bg.png'), (width, height))
     screen.blit(fon, (0, 0))
-    button = Button(
+
+    but_play = pygame.image.load("button.png")
+    button_play = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
-
-        410,  # X-coordinate of top left corner
-        235,  # Y-coordinate of top left corner
-        330,  # Width
+        550,  # X-coordinate of top left corner
+        455,  # Y-coordinate of top left corner
+        400,  # Width
         127,  # Height
-
         # Optional Parameters
-        image=but,
+        image=but_play,
         inactiveColour=(118, 174, 99, 255),  # Colour of button when not being interacted with
         hoverColour=(120, 160, 99, 0),  # Colour of button when being hovered over
         pressedColour=(0, 200, 20, 0),  # Colour of button when being clicked
 
+    )
+
+    but_es = pygame.image.load("button_es.png")
+    button_es = Button(
+        # Mandatory Parameters
+        screen,  # Surface to place button on
+        1190,  # X-coordinate of top left corner
+        10,  # Y-coordinate of top left corner
+        300,  # Width
+        100,  # Height
+        # Optional Parameters
+        image=but_es,
+        inactiveColour=(118, 174, 99, 255),  # Colour of button when not being interacted with
+        hoverColour=(120, 160, 99, 0),  # Colour of button when being hovered over
+        pressedColour=(0, 200, 20, 0),  # Colour of button when being clicked
+
+    )
+
+    but_raz = pygame.image.load("button_raz.png")
+    button_raz = Button(
+        # Mandatory Parameters
+        screen,  # Surface to place button on
+        1131,  # X-coordinate of top left corner
+        708,  # Y-coordinate of top left corner
+        365,  # Width
+        85,  # Height
+        # Optional Parameters
+        image=but_raz,
+        inactiveColour=(118, 174, 99, 255),  # Colour of button when not being interacted with
+        hoverColour=(120, 160, 99, 0),  # Colour of button when being hovered over
+        pressedColour=(0, 200, 20, 0),  # Colour of button when being clicked
     )
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if button.clicked:
+            if button_play.clicked:
                 s1 = False
                 s2 = True
                 return
@@ -89,7 +119,7 @@ def game1():
 
 
     global g1
-    background = pygame.image.load("bg.jpg")
+    background = pygame.image.load("bg_g1.png")
     otd = pygame.image.load("mr.png")
 
     class Player(pygame.sprite.Sprite):
@@ -152,7 +182,7 @@ def game1():
         def __init__(self, pos):
             super().__init__()
 
-            self.image = pygame.image.load("Coin.png")
+            self.image = pygame.image.load("coin.png")
             self.rect = self.image.get_rect()
 
             self.rect.topleft = pos
@@ -194,7 +224,7 @@ def game1():
 
         def generateCoin(self):
             if self.speed == 0:
-                coins.add(Coin((self.rect.centerx, self.rect.centery - 50)))
+                coins.add(Coin((self.rect.centerx, self.rect.centery - 65)))
 
     def check(platform, groupies):
         if pygame.sprite.spritecollideany(platform, groupies):
@@ -209,14 +239,14 @@ def game1():
             C = False
 
     def plat_gen():
-        while len(platforms) < 7:
+        while len(platforms) < 6:
             width = random.randrange(50, 100)
             p = None
             C = True
 
             while C:
                 p = platform()
-                p.rect.center = (random.randrange(0, 1),
+                p.rect.center = (random.randrange(0, 600),
                                  random.randrange(-50, 0))
                 C = check(p, platforms)
 
@@ -228,7 +258,7 @@ def game1():
     platforms = pygame.sprite.Group()
     coins = pygame.sprite.Group()
 
-    PT1 = platform(1400, 80)
+    PT1 = platform(700, 80)
     PT1.rect = PT1.surf.get_rect(center=(WIDTH / 2, HEIGHT - 10))
     PT1.moving = False
     PT1.point = False
@@ -239,15 +269,16 @@ def game1():
     all_sprites.add(P1)
     platforms.add(PT1)
 
-    for x in range(random.randint(5, 6)):
-        C = True
-        pl = platform()
-        while C:
-            pl = platform()
-            C = check(pl, platforms)
-        pl.generateCoin()
-        platforms.add(pl)
-        all_sprites.add(pl)
+
+
+    for i in range(100, 600, 100):
+        p = platform()
+        p.rect = p.surf.get_rect(center=(i, i))
+
+
+        p.generateCoin()
+        platforms.add(p)
+        all_sprites.add(p)
 
     run = True
 
@@ -337,7 +368,7 @@ def game2():
     dino_img_2 = pygame.image.load("dino2.png")
     dino_img_3 = pygame.image.load("dino3.png")
     cactus_img = pygame.image.load("cactus.png")
-    background_img = pygame.image.load("background.jpg")
+    background_img = pygame.image.load("bg_g2.png")
     ground_img = pygame.image.load("ground.png")
 
     dino_img_1 = pygame.transform.scale(dino_img_1, (70, 70))
@@ -570,7 +601,7 @@ def game2():
 def level_selection():
     pygame.init()
 
-    width, height = 1500, 800
+    width, height = 1500, 850
     white = (255, 255, 255)
 
     screen = pygame.display.set_mode((width, height))
@@ -585,56 +616,47 @@ def level_selection():
         a = i
 
     global g1, g2, g3
-    fon = pygame.transform.scale(load_image('start_game.png'), (width, height))
+    fon = pygame.transform.scale(load_image('lvl_sel_bg.png'), (width, height))
     screen.blit(fon, (0, 0))
-    button1 = Button(
+    button_g1 = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
-        100,  # X-coordinate of top left corner
-        250,  # Y-coordinate of top left corner
+        50,  # X-coordinate of top left corner
+        400,  # Y-coordinate of top left corner
         400,  # Width
-        150,  # Height
+        400,  # Height
 
         # Optional Parameters
-        text='Легкий',  # Text to display
-        fontSize=50,  # Size of font
-        radius=10,
         textColour=(255, 255, 255, 255),
         inactiveColour=(0, 204, 0, 255),  # Colour of button when not being interacted with
         hoverColour=(0, 102, 0, 255),  # Colour of button when being hovered over
         pressedColour=(0, 102, 0, 255),  # Colour of button when being clicked
 
     )
-    button2 = Button(
+    button_g2 = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
-        550,  # X-coordinate of top left corner
-        250,  # Y-coordinate of top left corner
+        570,  # X-coordinate of top left corner
+        400,  # Y-coordinate of top left corner
         400,  # Width
-        150,  # Height
+        400,  # Height
 
         # Optional Parameters
-        text='Средний',  # Text to display
-        fontSize=50,  # Size of font
-        radius=10,
         textColour=(255, 255, 255, 255),
         inactiveColour=(204, 204, 0, 255),  # Colour of button when not being interacted with
         hoverColour=(102, 102, 0, 255),  # Colour of button when being hovered over
         pressedColour=(102, 102, 0, 255),  # Colour of button when being clicked
 
     )
-    button3 = Button(
+    button_g3 = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
-        1000,  # X-coordinate of top left corner
-        250,  # Y-coordinate of top left corner
+        1080,  # X-coordinate of top left corner
+        400,  # Y-coordinate of top left corner
         400,  # Width
-        150,  # Height
+        400,  # Height
 
         # Optional Parameters
-        text='Сложный',  # Text to display
-        fontSize=50,  # Size of font
-        radius=10,
         textColour=(255, 255, 255, 255),
         inactiveColour=(204, 0, 0, 255),  # Colour of button when not being interacted with
         hoverColour=(102, 0, 0, 255),  # Colour of button when being hovered over
@@ -655,21 +677,21 @@ def level_selection():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if button1.clicked:
+            if button_g1.clicked:
                 g1 = True
                 button1 = 0
                 button2 = 0
                 button3 = 0
                 game1()
                 return
-            if button2.clicked:
+            if button_g2.clicked:
                 g2 = True
                 button1 = 0
                 button2 = 0
                 button3 = 0
                 game2()
                 return
-            if button3.clicked:
+            if button_g3.clicked:
                 g3 = True
                 button1 = 0
                 button2 = 0
