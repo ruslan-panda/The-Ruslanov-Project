@@ -618,6 +618,7 @@ def level_selection():
     global g1, g2, g3
     fon = pygame.transform.scale(load_image('lvl_sel_bg.png'), (width, height))
     screen.blit(fon, (0, 0))
+    but_g1 = pygame.image.load("f_g1.png")
     button_g1 = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
@@ -627,12 +628,14 @@ def level_selection():
         400,  # Height
 
         # Optional Parameters
+        image=but_g1,
         textColour=(255, 255, 255, 255),
         inactiveColour=(0, 204, 0, 255),  # Colour of button when not being interacted with
         hoverColour=(0, 102, 0, 255),  # Colour of button when being hovered over
         pressedColour=(0, 102, 0, 255),  # Colour of button when being clicked
 
     )
+    but_g2 = pygame.image.load("f_g2.png")
     button_g2 = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
@@ -642,6 +645,7 @@ def level_selection():
         400,  # Height
 
         # Optional Parameters
+        image=but_g2,
         textColour=(255, 255, 255, 255),
         inactiveColour=(204, 204, 0, 255),  # Colour of button when not being interacted with
         hoverColour=(102, 102, 0, 255),  # Colour of button when being hovered over
