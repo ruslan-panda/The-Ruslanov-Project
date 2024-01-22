@@ -121,8 +121,6 @@ def game1():
     displaysurface = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Game")
 
-
-
     global g1
     background = pygame.image.load("bg_g1.png")
     otd = pygame.image.load("mr.png")
@@ -274,12 +272,9 @@ def game1():
     all_sprites.add(P1)
     platforms.add(PT1)
 
-
-
     for i in range(100, 600, 100):
         p = platform()
         p.rect = p.surf.get_rect(center=(i, i))
-
 
         p.generateCoin()
         platforms.add(p)
@@ -345,6 +340,9 @@ def game1():
                                         SET first = {P1.score}
                                         WHERE first < {P1.score}
                                 """)
+                result = cur.execute(f"""UPDATE past_result
+                                         SET first = {P1.score}
+                                    """)
                 con.commit()
             time.sleep(5)
             level_selection()
@@ -599,6 +597,9 @@ def game2():
                                     SET second = {score.score}
                                     WHERE second < {score.score}
                             """)
+            result = cur.execute(f"""UPDATE past_result
+                                    SET second = {score.score}
+                                """)
             con.commit()
 
     pygame.quit()
@@ -803,7 +804,6 @@ def game3():
 
     )
 
-
     waiting = True
     while waiting:
         events = pygame.event.get()
@@ -835,6 +835,9 @@ def game3():
                                     SET third = {score.score}
                                     WHERE second < {score.score}
                             """)
+            result = cur.execute(f"""UPDATE past_result
+                                    SET third = {score.score}
+                                    """)
             con.commit()
 
     pygame.quit()
@@ -857,6 +860,13 @@ def level_selection():
         con.commit()
     for i in result:
         a = i
+    with sqlite3.connect("journeys.db") as con:
+        cur = con.cursor()
+        result = cur.execute("""SELECT * FROM past_result
+                        """)
+        con.commit()
+    for i in result:
+        b = i
 
     global g1, g2, g3
     fon = pygame.transform.scale(load_image('lvl_sel_bg.png'), (width, height))
@@ -912,14 +922,23 @@ def level_selection():
     )
     while True:
         f = pygame.font.SysFont("Verdana", 20)
-        g = f.render(f"{a[0]}", True, (123, 255, 0))
-        screen.blit(g, (50, 50))
+        g = f.render(f"ЛУЧШИЙ СЧЁТ ЗА ВСЁ ВРЕМЯ: {a[0]}", True, (123, 255, 0))
+        screen.blit(g, (70, 360))
         f = pygame.font.SysFont("Verdana", 20)
-        g = f.render(f"{a[1]}", True, (123, 255, 0))
-        screen.blit(g, (100, 50))
+        g = f.render(f"ЛУЧШИЙ СЧЁТ ЗА ВСЁ ВРЕМЯ: {a[1]}", True, (123, 255, 0))
+        screen.blit(g, (600, 360))
         f = pygame.font.SysFont("Verdana", 20)
-        g = f.render(f"{a[2]}", True, (123, 255, 0))
-        screen.blit(g, (150, 50))
+        g = f.render(f"ЛУЧШИЙ СЧЁТ ЗА ВСЁ ВРЕМЯ: {a[2]}", True, (123, 255, 0))
+        screen.blit(g, (1110, 360))
+        f = pygame.font.SysFont("Verdana", 20)
+        g = f.render(f"ПРОШЛЫЙ РЕЗУЛЬТАТ: {b[0]}", True, (123, 255, 0))
+        screen.blit(g, (70, 340))
+        f = pygame.font.SysFont("Verdana", 20)
+        g = f.render(f"ПРОШЛЫЙ РЕЗУЛЬТАТ: {b[1]}", True, (123, 255, 0))
+        screen.blit(g, (600, 340))
+        f = pygame.font.SysFont("Verdana", 20)
+        g = f.render(f"ПРОШЛЫЙ РЕЗУЛЬТАТ: {b[2]}", True, (123, 255, 0))
+        screen.blit(g, (1110, 340))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -947,15 +966,6 @@ def level_selection():
                 return
             pygame_widgets.update(event)  # Call once every loop to allow widgets to render and listen
             pygame.display.update()
-        f = pygame.font.SysFont("Verdana", 20)
-        g = f.render(f"{a[0]}", True, (123, 255, 0))
-        screen.blit(g, (50, 50))
-        f = pygame.font.SysFont("Verdana", 20)
-        g = f.render(f"{a[1]}", True, (123, 255, 0))
-        screen.blit(g, (100, 50))
-        f = pygame.font.SysFont("Verdana", 20)
-        g = f.render(f"{a[2]}", True, (123, 255, 0))
-        screen.blit(g, (150, 50))
 
 
 start_screen()
