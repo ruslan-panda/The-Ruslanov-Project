@@ -39,7 +39,6 @@ def start_screen():
     pygame.display.set_caption("Анимация бега в Pygame")
 
     fon = pygame.transform.scale(load_image('bg.png'), (width, height))
-    screen.blit(fon, (0, 0))
 
     but_play = pygame.image.load("button.png")
     button_play = Button(
@@ -88,7 +87,9 @@ def start_screen():
         pressedColour=(0, 200, 20, 0),  # Colour of button when being clicked
     )
     while True:
-        for event in pygame.event.get():
+        screen.blit(fon, (0, 0))
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
@@ -101,8 +102,55 @@ def start_screen():
             if button_es.clicked:
                 pygame.quit()
                 sys.exit()
-            pygame_widgets.update(event)  # Call once every loop to allow widgets to render and listen
-            pygame.display.flip()
+            if button_raz.clicked:
+                button_raz = 0
+                button_es = 0
+                button_play = 0
+                razrab()
+                return
+        pygame_widgets.update(events)  # Call once every loop to allow widgets to render and listen
+        pygame.display.flip()
+
+def razrab():
+    global s1, s2
+    s1 = True
+    pygame.init()
+
+    width, height = 1500, 800
+    white = (255, 255, 255)
+
+    screen = pygame.display.set_mode((width, height))
+    pygame.display.set_caption("Анимация бега в Pygame")
+
+    fon = pygame.transform.scale(load_image('bg.png'), (width, height))
+    screen.blit(fon, (0, 0))
+    but_es = pygame.image.load("button_es.png")
+    button_es = Button(
+        # Mandatory Parameters
+        screen,  # Surface to place button on
+        1190,  # X-coordinate of top left corner
+        10,  # Y-coordinate of top left corner
+        300,  # Width
+        100,  # Height
+        # Optional Parameters
+        image=but_es,
+        inactiveColour=(118, 174, 99, 255),  # Colour of button when not being interacted with
+        hoverColour=(120, 160, 99, 0),  # Colour of button when being hovered over
+        pressedColour=(0, 200, 20, 0),  # Colour of button when being clicked
+
+    )
+    while True:
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if button_es.clicked:
+                button_es = 0
+                start_screen()
+                return
+        pygame_widgets.update(events)  # Call once every loop to allow widgets to render and listen
+        pygame.display.flip()
 
 
 def game1():
@@ -282,7 +330,7 @@ def game1():
 
     run = True
 
-    while True:
+    while run:
         P1.update()
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -344,13 +392,65 @@ def game1():
                                          SET first = {P1.score}
                                     """)
                 con.commit()
-            time.sleep(5)
-            level_selection()
-            return
+            run = False
 
         pygame.display.update()
         FramePerSec.tick(FPS)
 
+    but_es_for_game1 = pygame.image.load("but_es_for_game.png")
+    button_sel = Button(
+        # Mandatory Parameters
+        displaysurface,  # Surface to place button on
+        0,  # X-coordinate of top left corner
+        525,  # Y-coordinate of top left corner
+        200,  # Width
+        75,  # Height
+
+        # Optional Parameters
+        image=but_es_for_game1,
+        textColour=(255, 255, 255, 255),
+        inactiveColour=(0,0,0),  # Colour of button when not being interacted with
+        hoverColour=(102, 102, 0, 255),  # Colour of button when being hovered over
+        pressedColour=(102, 102, 0, 255),  # Colour of button when being clicked
+
+    )
+    but_z_for_game1 = pygame.image.load("spkj.png")
+    button_zan = Button(
+        # Mandatory Parameters
+        displaysurface,  # Surface to place button on
+        200,  # X-coordinate of top left corner
+        525,  # Y-coordinate of top left corner
+        200,  # Width
+        75,  # Height
+
+        # Optional Parameters
+        image=but_z_for_game1,  # Text to display
+        textColour=(255, 255, 255, 255),
+        inactiveColour=(0, 204, 0, 255),  # Colour of button when not being interacted with
+        hoverColour=(0, 102, 0, 255),  # Colour of button when being hovered over
+        pressedColour=(0, 102, 0, 255),  # Colour of button when being clicked
+
+    )
+
+    waiting = True
+    while waiting:
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                waiting = False
+
+        pygame_widgets.update(events)  # Call once every loop to allow widgets to render and listen
+        pygame.display.update()
+        if button_sel.clicked:
+            button_sel = None
+            button_zan = None
+            level_selection()
+            return
+        if button_zan.clicked:
+            button_sel = None
+            button_zan = None
+            game1()
+            return
 
 def game2():
     import pygame
@@ -534,43 +634,43 @@ def game2():
 
     pygame.display.flip()
 
-    button_zan = Button(
-        # Mandatory Parameters
-        screen,  # Surface to place button on
-        550,  # X-coordinate of top left corner
-        250,  # Y-coordinate of top left corner
-        400,  # Width
-        150,  # Height
-
-        # Optional Parameters
-        text='123456',  # Text to display
-        fontSize=50,  # Size of font
-        radius=10,
-        textColour=(255, 255, 255, 255),
-        inactiveColour=(204, 204, 0, 255),  # Colour of button when not being interacted with
-        hoverColour=(102, 102, 0, 255),  # Colour of button when being hovered over
-        pressedColour=(102, 102, 0, 255),  # Colour of button when being clicked
-
-    )
-
+    but_es_for_game1 = pygame.image.load("but_es_for_game.png")
     button_sel = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
         0,  # X-coordinate of top left corner
-        0,  # Y-coordinate of top left corner
-        50,  # Width
-        50,  # Height
+        325,  # Y-coordinate of top left corner
+        200,  # Width
+        75,  # Height
 
         # Optional Parameters
-        text='1234567876543',  # Text to display
-        fontSize=50,  # Size of font
-        radius=10,
+        image=but_es_for_game1,
+        textColour=(255, 255, 255, 255),
+        inactiveColour=(0, 0, 0),  # Colour of button when not being interacted with
+        hoverColour=(102, 102, 0, 255),  # Colour of button when being hovered over
+        pressedColour=(102, 102, 0, 255),  # Colour of button when being clicked
+
+    )
+    but_z_for_game1 = pygame.image.load("spkj.png")
+    button_zan = Button(
+        # Mandatory Parameters
+        screen,  # Surface to place button on
+        200,  # X-coordinate of top left corner
+        325,  # Y-coordinate of top left corner
+        200,  # Width
+        75,  # Height
+
+        # Optional Parameters
+        image=but_z_for_game1,  # Text to display
         textColour=(255, 255, 255, 255),
         inactiveColour=(0, 204, 0, 255),  # Colour of button when not being interacted with
         hoverColour=(0, 102, 0, 255),  # Colour of button when being hovered over
         pressedColour=(0, 102, 0, 255),  # Colour of button when being clicked
 
     )
+
+    gm = pygame.image.load("mr_for_g1.png")
+    screen.blit(gm,(0, 0))
 
     waiting = True
     while waiting:
@@ -602,8 +702,6 @@ def game2():
                                 """)
             con.commit()
 
-    pygame.quit()
-    sys.exit()
 
 
 def game3():
@@ -766,37 +864,34 @@ def game3():
 
     pygame.display.flip()
 
-    button_zan = Button(
-        # Mandatory Parameters
-        screen,  # Surface to place button on
-        550,  # X-coordinate of top left corner
-        250,  # Y-coordinate of top left corner
-        400,  # Width
-        150,  # Height
-
-        # Optional Parameters
-        text='123456',  # Text to display
-        fontSize=50,  # Size of font
-        radius=10,
-        textColour=(255, 255, 255, 255),
-        inactiveColour=(204, 204, 0, 255),  # Colour of button when not being interacted with
-        hoverColour=(102, 102, 0, 255),  # Colour of button when being hovered over
-        pressedColour=(102, 102, 0, 255),  # Colour of button when being clicked
-
-    )
-
+    but_es_for_game1 = pygame.image.load("but_es_for_game.png")
     button_sel = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
         0,  # X-coordinate of top left corner
-        0,  # Y-coordinate of top left corner
-        50,  # Width
-        50,  # Height
+        525,  # Y-coordinate of top left corner
+        200,  # Width
+        75,  # Height
 
         # Optional Parameters
-        text='1234567876543',  # Text to display
-        fontSize=50,  # Size of font
-        radius=10,
+        image=but_es_for_game1,
+        textColour=(255, 255, 255, 255),
+        inactiveColour=(0, 0, 0),  # Colour of button when not being interacted with
+        hoverColour=(102, 102, 0, 255),  # Colour of button when being hovered over
+        pressedColour=(102, 102, 0, 255),  # Colour of button when being clicked
+
+    )
+    but_z_for_game1 = pygame.image.load("spkj.png")
+    button_zan = Button( 
+        # Mandatory Parameters
+        screen,  # Surface to place button on
+        200,  # X-coordinate of top left corner
+        525,  # Y-coordinate of top left corner
+        200,  # Width
+        75,  # Height
+
+        # Optional Parameters
+        image=but_z_for_game1,  # Text to display
         textColour=(255, 255, 255, 255),
         inactiveColour=(0, 204, 0, 255),  # Colour of button when not being interacted with
         hoverColour=(0, 102, 0, 255),  # Colour of button when being hovered over
@@ -905,6 +1000,7 @@ def level_selection():
         pressedColour=(102, 102, 0, 255),  # Colour of button when being clicked
 
     )
+    but_g3 = pygame.image.load("f_g3.png")
     button_g3 = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
@@ -914,6 +1010,7 @@ def level_selection():
         400,  # Height
 
         # Optional Parameters
+        image=but_g3,
         textColour=(255, 255, 255, 255),
         inactiveColour=(204, 0, 0, 255),  # Colour of button when not being interacted with
         hoverColour=(102, 0, 0, 255),  # Colour of button when being hovered over
