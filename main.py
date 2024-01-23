@@ -124,12 +124,14 @@ def razrab():
 
     fon = pygame.transform.scale(load_image('bg.png'), (width, height))
     screen.blit(fon, (0, 0))
+    fon = pygame.transform.scale(load_image('gr.png'), (width, height))
+    screen.blit(fon, (0, 0))
     but_es = pygame.image.load("button_es.png")
     button_es = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
-        1190,  # X-coordinate of top left corner
-        10,  # Y-coordinate of top left corner
+        600,  # X-coordinate of top left corner
+        700,  # Y-coordinate of top left corner
         300,  # Width
         100,  # Height
         # Optional Parameters
@@ -401,12 +403,12 @@ def game1():
     button_sel = Button(
         # Mandatory Parameters
         displaysurface,  # Surface to place button on
-        0,  # X-coordinate of top left corner
-        525,  # Y-coordinate of top left corner
+        60,  # X-coordinate of top left corner
+        370,  # Y-coordinate of top left corner
         200,  # Width
         75,  # Height
 
-        # Optional Parameters
+        # Optional Parametersd
         image=but_es_for_game1,
         textColour=(255, 255, 255, 255),
         inactiveColour=(0,0,0),  # Colour of button when not being interacted with
@@ -418,8 +420,8 @@ def game1():
     button_zan = Button(
         # Mandatory Parameters
         displaysurface,  # Surface to place button on
-        200,  # X-coordinate of top left corner
-        525,  # Y-coordinate of top left corner
+        300,  # X-coordinate of top left corner
+        500,  # Y-coordinate of top left corner
         200,  # Width
         75,  # Height
 
@@ -458,7 +460,7 @@ def game2():
     import random
 
     pygame.init()
-    WIDTH, HEIGHT = 800, 400
+    WIDTH, HEIGHT = 800, 600
     GROUND_HEIGHT = 50
     FPS = 60
 
@@ -638,8 +640,8 @@ def game2():
     button_sel = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
-        0,  # X-coordinate of top left corner
-        325,  # Y-coordinate of top left corner
+        310,  # X-coordinate of top left corner
+        295,  # Y-coordinate of top left corner
         200,  # Width
         75,  # Height
 
@@ -655,8 +657,8 @@ def game2():
     button_zan = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
-        200,  # X-coordinate of top left corner
-        325,  # Y-coordinate of top left corner
+        310,  # X-coordinate of top left corner
+        464,  # Y-coordinate of top left corner
         200,  # Width
         75,  # Height
 
@@ -669,7 +671,7 @@ def game2():
 
     )
 
-    gm = pygame.image.load("mr_for_g1.png")
+    gm = pygame.image.load("game_over.png")
     screen.blit(gm,(0, 0))
 
     waiting = True
@@ -868,8 +870,8 @@ def game3():
     button_sel = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
-        0,  # X-coordinate of top left corner
-        525,  # Y-coordinate of top left corner
+        60,  # X-coordinate of top left corner
+        370,  # Y-coordinate of top left corner
         200,  # Width
         75,  # Height
 
@@ -885,8 +887,8 @@ def game3():
     button_zan = Button( 
         # Mandatory Parameters
         screen,  # Surface to place button on
-        200,  # X-coordinate of top left corner
-        525,  # Y-coordinate of top left corner
+        300,  # X-coordinate of top left corner
+        500,  # Y-coordinate of top left corner
         200,  # Width
         75,  # Height
 
@@ -1066,4 +1068,3 @@ def level_selection():
 
 
 start_screen()
-level_selection()
