@@ -36,7 +36,7 @@ def start_screen():
     white = (255, 255, 255)
 
     screen = pygame.display.set_mode((width, height))
-    pygame.display.set_caption("Анимация бега в Pygame")
+    pygame.display.set_caption("Escape of the knight")
 
     fon = pygame.transform.scale(load_image('data/bg.png'), (width, height))
 
@@ -120,7 +120,7 @@ def razrab():
     white = (255, 255, 255)
 
     screen = pygame.display.set_mode((width, height))
-    pygame.display.set_caption("Анимация бега в Pygame")
+    pygame.display.set_caption("Escape of the knight")
 
     fon = pygame.transform.scale(load_image('data/bg.png'), (width, height))
     screen.blit(fon, (0, 0))
@@ -463,7 +463,7 @@ def game2():
     BLACK = (0, 0, 0)
 
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Динозаврик")
+    pygame.display.set_caption("Escape of the knight")
     dino_img_1 = pygame.image.load("data/dino1.png")
     dino_img_2 = pygame.image.load("data/dino2.png")
     dino_img_3 = pygame.image.load("data/dino3.png")
@@ -715,7 +715,7 @@ def game3():
     BLACK = (0, 0, 0)
 
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Flappy Bird")
+    pygame.display.set_caption("Escape of the knight")
 
     background_img = pygame.image.load("data/background.jpg")
     bird_img = pygame.image.load("data/bird.png")
@@ -943,7 +943,7 @@ def level_selection():
     white = (255, 255, 255)
 
     screen = pygame.display.set_mode((width, height))
-    pygame.display.set_caption("Анимация бега в Pygame")
+    pygame.display.set_caption("Escape of the knight")
 
     with sqlite3.connect("journeys.db") as con:
         cur = con.cursor()
@@ -1065,6 +1065,7 @@ def level_selection():
                 button_g1 = 0
                 button_g2 = 0
                 button_g3 = 0
+                button_es = 0
                 game2()
                 return
             if button_g3.clicked:
@@ -1072,12 +1073,14 @@ def level_selection():
                 button_g1 = 0
                 button_g2 = 0
                 button_g3 = 0
+                button_es = 0
                 game3()
                 return
             if button_es.clicked:
                 button_g1 = 0
                 button_g2 = 0
                 button_g3 = 0
+                button_es = 0
                 start_screen()
                 return
             pygame_widgets.update(event)  # Call once every loop to allow widgets to render and listen
