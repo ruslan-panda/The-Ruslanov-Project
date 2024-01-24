@@ -38,9 +38,9 @@ def start_screen():
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Анимация бега в Pygame")
 
-    fon = pygame.transform.scale(load_image('bg.png'), (width, height))
+    fon = pygame.transform.scale(load_image('data/bg.png'), (width, height))
 
-    but_play = pygame.image.load("button.png")
+    but_play = pygame.image.load("data/button.png")
     button_play = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
@@ -56,7 +56,7 @@ def start_screen():
 
     )
 
-    but_es = pygame.image.load("button_es.png")
+    but_es = pygame.image.load("data/button_es.png")
     button_es = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
@@ -72,7 +72,7 @@ def start_screen():
 
     )
 
-    but_raz = pygame.image.load("button_raz.png")
+    but_raz = pygame.image.load("data/button_raz.png")
     button_raz = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
@@ -122,11 +122,11 @@ def razrab():
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Анимация бега в Pygame")
 
-    fon = pygame.transform.scale(load_image('bg.png'), (width, height))
+    fon = pygame.transform.scale(load_image('data/bg.png'), (width, height))
     screen.blit(fon, (0, 0))
-    fon = pygame.transform.scale(load_image('gr.png'), (width, height))
+    fon = pygame.transform.scale(load_image('data/gr.png'), (width, height))
     screen.blit(fon, (0, 0))
-    but_es = pygame.image.load("button_es.png")
+    but_es = pygame.image.load("data/button_es.png")
     button_es = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
@@ -168,17 +168,17 @@ def game1():
 
     FramePerSec = pygame.time.Clock()
 
-    displaysurface = pygame.display.set_mode((WIDTH, HEIGHT))
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Game")
 
     global g1
-    background = pygame.image.load("bg_g1.png")
-    otd = pygame.image.load("mr.png")
+    background = pygame.image.load("data/bg_g1.png")
+    otd = pygame.image.load("data/mr.png")
 
     class Player(pygame.sprite.Sprite):
         def __init__(self):
             super().__init__()
-            self.surf = pygame.image.load("1.png")
+            self.surf = pygame.image.load("data/1.png")
             self.rect = self.surf.get_rect()
 
             self.pos = vec((10, 360))
@@ -235,7 +235,7 @@ def game1():
         def __init__(self, pos):
             super().__init__()
 
-            self.image = pygame.image.load("coin.png")
+            self.image = pygame.image.load("data/coin.png")
             self.rect = self.image.get_rect()
 
             self.rect.topleft = pos
@@ -252,7 +252,7 @@ def game1():
             if width == 0:
                 width = random.randint(50, 120)
 
-            self.image = pygame.image.load("platform.png")
+            self.image = pygame.image.load("data/platform.png")
             self.surf = pygame.transform.scale(self.image, (width, height))
             self.rect = self.surf.get_rect(center=(random.randint(0, WIDTH - 10),
                                                    random.randint(0, HEIGHT - 30)))
@@ -358,32 +358,27 @@ def game1():
                     coin.kill()
 
         plat_gen()
-        displaysurface.blit(background, (0, 0))
+        screen.blit(background, (0, 0))
         f = pygame.font.SysFont("Verdana", 20)
         g = f.render(str(P1.score), True, (123, 255, 0))
-        displaysurface.blit(g, (WIDTH / 2, 10))
+        screen.blit(g, (WIDTH / 2, 10))
 
         for entity in all_sprites:
-            displaysurface.blit(entity.surf, entity.rect)
+            screen.blit(entity.surf, entity.rect)
             entity.move()
 
         for coin in coins:
-            displaysurface.blit(coin.image, coin.rect)
+            screen.blit(coin.image, coin.rect)
             coin.update()
 
         if P1.rect.top > HEIGHT:
             for entity in all_sprites:
                 entity.kill()
             time.sleep(1)
-            displaysurface.blit(otd, (0, 0))
+            screen.blit(otd, (0, 0))
             g1 = False
             run = False
             g1 = False
-            f = pygame.font.SysFont("SONY Fixed", 50)
-            g = f.render(f"Вам покарилось {str(P1.score)} очка", True, (123, 255, 0))
-            text_rect = g.get_rect(center=(WIDTH / 2, HEIGHT / 2))
-            displaysurface.blit(g, text_rect)
-            pygame.display.update()
             with sqlite3.connect("journeys.db") as con:
                 cur = con.cursor()
                 result = cur.execute(f"""UPDATE the_best
@@ -399,10 +394,10 @@ def game1():
         pygame.display.update()
         FramePerSec.tick(FPS)
 
-    but_es_for_game1 = pygame.image.load("but_es_for_game.png")
+    but_es_for_game1 = pygame.image.load("data/but_es_for_game.png")
     button_sel = Button(
         # Mandatory Parameters
-        displaysurface,  # Surface to place button on
+        screen,  # Surface to place button on
         60,  # X-coordinate of top left corner
         370,  # Y-coordinate of top left corner
         200,  # Width
@@ -416,10 +411,10 @@ def game1():
         pressedColour=(102, 102, 0, 255),  # Colour of button when being clicked
 
     )
-    but_z_for_game1 = pygame.image.load("spkj.png")
+    but_z_for_game1 = pygame.image.load("data/spkj.png")
     button_zan = Button(
         # Mandatory Parameters
-        displaysurface,  # Surface to place button on
+        screen,  # Surface to place button on
         300,  # X-coordinate of top left corner
         500,  # Y-coordinate of top left corner
         200,  # Width
@@ -469,12 +464,12 @@ def game2():
 
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Динозаврик")
-    dino_img_1 = pygame.image.load("dino1.png")
-    dino_img_2 = pygame.image.load("dino2.png")
-    dino_img_3 = pygame.image.load("dino3.png")
-    cactus_img = pygame.image.load("cactus.png")
-    background_img = pygame.image.load("bg_g2.png")
-    ground_img = pygame.image.load("ground.png")
+    dino_img_1 = pygame.image.load("data/dino1.png")
+    dino_img_2 = pygame.image.load("data/dino2.png")
+    dino_img_3 = pygame.image.load("data/dino3.png")
+    cactus_img = pygame.image.load("data/cactus.png")
+    background_img = pygame.image.load("data/bg_g2.png")
+    ground_img = pygame.image.load("data/ground.png")
 
     dino_img_1 = pygame.transform.scale(dino_img_1, (70, 70))
     dino_img_2 = pygame.transform.scale(dino_img_2, (70, 70))
@@ -636,7 +631,7 @@ def game2():
 
     pygame.display.flip()
 
-    but_es_for_game1 = pygame.image.load("but_es_for_game.png")
+    but_es_for_game1 = pygame.image.load("data/but_es_for_game.png")
     button_sel = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
@@ -653,7 +648,7 @@ def game2():
         pressedColour=(102, 102, 0, 255),  # Colour of button when being clicked
 
     )
-    but_z_for_game1 = pygame.image.load("spkj.png")
+    but_z_for_game1 = pygame.image.load("data/spkj.png")
     button_zan = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
@@ -671,7 +666,7 @@ def game2():
 
     )
 
-    gm = pygame.image.load("game_over.png")
+    gm = pygame.image.load("data/game_over.png")
     screen.blit(gm,(0, 0))
 
     waiting = True
@@ -722,10 +717,10 @@ def game3():
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Flappy Bird")
 
-    background_img = pygame.image.load("background.jpg")
-    bird_img = pygame.image.load("bird.png")
-    pipe_img = pygame.image.load("pipe.png")
-    spike_img = pygame.image.load("pipe.png")
+    background_img = pygame.image.load("data/background.jpg")
+    bird_img = pygame.image.load("data/bird.png")
+    pipe_img = pygame.image.load("data/pipe.png")
+    spike_img = pygame.image.load("data/pipe.png")
 
     bird_img = pygame.transform.scale(bird_img, (80, 60))
     bird_img = pygame.transform.flip(bird_img, True, False)
@@ -866,7 +861,7 @@ def game3():
 
     pygame.display.flip()
 
-    but_es_for_game1 = pygame.image.load("but_es_for_game.png")
+    but_es_for_game1 = pygame.image.load("data/but_es_for_game.png")
     button_sel = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
@@ -883,7 +878,7 @@ def game3():
         pressedColour=(102, 102, 0, 255),  # Colour of button when being clicked
 
     )
-    but_z_for_game1 = pygame.image.load("spkj.png")
+    but_z_for_game1 = pygame.image.load("data/spkj.png")
     button_zan = Button( 
         # Mandatory Parameters
         screen,  # Surface to place button on
@@ -966,9 +961,9 @@ def level_selection():
         b = i
 
     global g1, g2, g3
-    fon = pygame.transform.scale(load_image('lvl_sel_bg.png'), (width, height))
+    fon = pygame.transform.scale(load_image('data/lvl_sel_bg.png'), (width, height))
     screen.blit(fon, (0, 0))
-    but_g1 = pygame.image.load("f_g1.png")
+    but_g1 = pygame.image.load("data/f_g1.png")
     button_g1 = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
@@ -985,7 +980,7 @@ def level_selection():
         pressedColour=(0, 102, 0, 255),  # Colour of button when being clicked
 
     )
-    but_g2 = pygame.image.load("f_g2.png")
+    but_g2 = pygame.image.load("data/f_g2.png")
     button_g2 = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
@@ -1002,7 +997,7 @@ def level_selection():
         pressedColour=(102, 102, 0, 255),  # Colour of button when being clicked
 
     )
-    but_g3 = pygame.image.load("f_g3.png")
+    but_g3 = pygame.image.load("data/f_g3.png")
     button_g3 = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
