@@ -6,7 +6,6 @@ import time
 import os
 import pygame_widgets
 from pygame_widgets.button import Button
-import pymorphy2
 import sqlite3
 
 
