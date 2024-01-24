@@ -27,8 +27,6 @@ g3 = False
 
 
 def start_screen():
-    global s1, s2
-    s1 = True
     pygame.init()
 
     width, height = 1500, 800
@@ -110,9 +108,8 @@ def start_screen():
         pygame_widgets.update(events)  # Call once every loop to allow widgets to render and listen
         pygame.display.flip()
 
+
 def razrab():
-    global s1, s2
-    s1 = True
     pygame.init()
 
     width, height = 1500, 800
@@ -291,7 +288,7 @@ def game1():
             C = False
 
     def plat_gen():
-        while len(platforms) < 6:
+        while len(platforms) < 7:
             width = random.randrange(50, 100)
             p = None
             C = True
@@ -405,7 +402,7 @@ def game1():
         # Optional Parametersd
         image=but_es_for_game1,
         textColour=(255, 255, 255, 255),
-        inactiveColour=(0,0,0),  # Colour of button when not being interacted with
+        inactiveColour=(0, 0, 0),  # Colour of button when not being interacted with
         hoverColour=(102, 102, 0, 255),  # Colour of button when being hovered over
         pressedColour=(102, 102, 0, 255),  # Colour of button when being clicked
 
@@ -447,6 +444,7 @@ def game1():
             button_zan = None
             game1()
             return
+
 
 def game2():
     import pygame
@@ -666,7 +664,7 @@ def game2():
     )
 
     gm = pygame.image.load("data/game_over.png")
-    screen.blit(gm,(0, 0))
+    screen.blit(gm, (0, 0))
 
     waiting = True
     while waiting:
@@ -697,7 +695,6 @@ def game2():
                                     SET second = {score.score}
                                 """)
             con.commit()
-
 
 
 def game3():
@@ -878,7 +875,7 @@ def game3():
 
     )
     but_z_for_game1 = pygame.image.load("data/spkj.png")
-    button_zan = Button( 
+    button_zan = Button(
         # Mandatory Parameters
         screen,  # Surface to place button on
         300,  # X-coordinate of top left corner
@@ -925,7 +922,7 @@ def game3():
             result = cur.execute(f"""UPDATE the_best
                                     SET third = {score.score}
                                     WHERE second < {score.score}
-                            """)
+                                    """)
             result = cur.execute(f"""UPDATE past_result
                                     SET third = {score.score}
                                     """)
