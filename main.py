@@ -1014,6 +1014,22 @@ def level_selection():
         pressedColour=(102, 0, 0, 255),  # Colour of button when being clicked
 
     )
+
+    but_es = pygame.image.load("data/button_es.png")
+    button_es = Button(
+        # Mandatory Parameters
+        screen,  # Surface to place button on
+        1190,  # X-coordinate of top left corner
+        10,  # Y-coordinate of top left corner
+        300,  # Width
+        100,  # Height
+        # Optional Parameters
+        image=but_es,
+        inactiveColour=(118, 174, 99, 255),  # Colour of button when not being interacted with
+        hoverColour=(120, 160, 99, 0),  # Colour of button when being hovered over
+        pressedColour=(0, 200, 20, 0),  # Colour of button when being clicked
+
+    )
     while True:
         f = pygame.font.SysFont("Verdana", 20)
         g = f.render(f"ЛУЧШИЙ СЧЁТ ЗА ВСЁ ВРЕМЯ: {a[0]}", True, (123, 255, 0))
@@ -1057,6 +1073,12 @@ def level_selection():
                 button_g2 = 0
                 button_g3 = 0
                 game3()
+                return
+            if button_es.clicked:
+                button_g1 = 0
+                button_g2 = 0
+                button_g3 = 0
+                start_screen()
                 return
             pygame_widgets.update(event)  # Call once every loop to allow widgets to render and listen
             pygame.display.update()
